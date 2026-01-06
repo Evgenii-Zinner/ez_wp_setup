@@ -7,7 +7,6 @@
 [![Shell: Bash](https://img.shields.io/badge/Shell-Bash-blue.svg)](https://www.gnu.org/software/bash/)
 [![WordPress: Latest](https://img.shields.io/badge/WordPress-Latest-blue.svg)](https://wordpress.org/download/)
 
-`wordpress-install` `quick-wp-installation`
 
 A collection of high-performance shell scripts for **quick WP installation** and automated **WordPress install** on Ubuntu/Debian. Provision a complete LAMP stack with optimized performance in seconds.
 
@@ -27,12 +26,12 @@ Deploy your WordPress site instantly. Pull and run any of the scripts directly o
 
 ### Option A: Using `curl`
 ```bash
-curl -sSL https://raw.githubusercontent.com/Evgenii-Zinner/ez_wp_setup/main/install_fresh_mysql.sh -o setup.sh && chmod +x setup.sh && sudo ./setup.sh
+curl -sSL https://raw.githubusercontent.com/Evgenii-Zinner/ez_wp_setup/master/install_fresh_mysql.sh -o setup.sh && chmod +x setup.sh && sudo ./setup.sh
 ```
 
 ### Option B: Using `wget`
 ```bash
-wget -q -O setup.sh https://raw.githubusercontent.com/Evgenii-Zinner/ez_wp_setup/main/install_fresh_mariadb.sh && chmod +x setup.sh && sudo ./setup.sh
+wget -q -O setup.sh https://raw.githubusercontent.com/Evgenii-Zinner/ez_wp_setup/master/install_fresh_mariadb.sh && chmod +x setup.sh && sudo ./setup.sh
 ```
 
 ---
