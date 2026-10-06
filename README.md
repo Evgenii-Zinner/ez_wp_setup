@@ -2,58 +2,70 @@
 
 ![EZ WP Setup Installer](assets/installer.png)
 
+[![Platform: WSL2 / Linux](https://img.shields.io/badge/Platform-WSL2%20%7C%20Linux-purple.svg)](https://ubuntu.com/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![OS: Ubuntu/Debian](https://img.shields.io/badge/OS-Ubuntu%20%7C%20Debian-orange.svg)](https://ubuntu.com/)
 [![Shell: Bash](https://img.shields.io/badge/Shell-Bash-blue.svg)](https://www.gnu.org/software/bash/)
 [![WordPress: Latest](https://img.shields.io/badge/WordPress-Latest-blue.svg)](https://wordpress.org/download/)
 
-
-A collection of high-performance shell scripts for **quick WP installation** and automated **WordPress install** on Ubuntu/Debian. Provision a complete LAMP stack with optimized performance in seconds.
+A lightweight helper for **instant WordPress installation** on fresh **WSL2**, Ubuntu, and Debian systems. Provisions a complete, fully tuned LAMP stack and the latest WordPress release in under 60 seconds with an interactive CLI installer.
 
 ## ✨ Scripts Included
 
-- **`install_fresh_mysql.sh`**: Automatic WordPress setup using **MySQL**.
-- **`install_fresh_mariadb.sh`**: Ultra-fast WordPress installation using **MariaDB**.
+- **`install_fresh_mariadb.sh`**: Ultra-fast WordPress installation with **MariaDB** *(Recommended)*.
+- **`install_fresh_mysql.sh`**: WordPress setup using standard **MySQL**.
 
 ---
 
-## ⚡ Quick Start
+## ⚡ Quick Start (Fresh WSL / Ubuntu)
 
-Deploy your WordPress site instantly. Pull and run any of the scripts directly on your server.
+Open your fresh WSL2 or Ubuntu terminal and run one of the commands below:
 
 > [!IMPORTANT]
-> Always run these scripts with `sudo` or as the `root` user for a successful **WordPress install**.
+> Must be executed with `sudo` or as `root` on a fresh, clean environment.
 
-### Option A: Using `curl`
+### Option 1: MariaDB (Recommended)
 ```bash
-curl -sSL https://raw.githubusercontent.com/Evgenii-Zinner/ez_wp_setup/master/install_fresh_mysql.sh -o setup.sh && chmod +x setup.sh && sudo ./setup.sh
+curl -sSL https://raw.githubusercontent.com/Evgenii-Zinner/ez_wp_setup/master/install_fresh_mariadb.sh -o setup.sh && chmod +x setup.sh && sudo ./setup.sh
 ```
-
-### Option B: Using `wget`
+*Or using `wget`:*
 ```bash
 wget -q -O setup.sh https://raw.githubusercontent.com/Evgenii-Zinner/ez_wp_setup/master/install_fresh_mariadb.sh && chmod +x setup.sh && sudo ./setup.sh
 ```
 
----
-
-## 🛠 What's inside?
-
-- **LAMP Stack**: Apache2, PHP (with all WP-required extensions), and your choice of DB for a **complete wordpress installation**.
-- **Auto-Provisioning**:
-    - Generates secure random passwords for DB and Root.
-    - Automatically fetches the latest WordPress core.
-    - Configures `wp-config.php` with salts and DB credentials.
-    - Sets correct file permissions (`www-data`).
-    - Configures Apache `mod_rewrite`.
+### Option 2: MySQL
+```bash
+curl -sSL https://raw.githubusercontent.com/Evgenii-Zinner/ez_wp_setup/master/install_fresh_mysql.sh -o setup.sh && chmod +x setup.sh && sudo ./setup.sh
+```
 
 ---
 
-## 🖥 VM Test Environment Setup
+## 🌐 Accessing Your WordPress Site
 
-Perfect for local development or testing your **quick wp installation** on a Virtual Machine (VirtualBox, VMware, Proxmox):
+Once installation finishes, your generated database credentials and access URL will be displayed in a terminal summary box:
 
-1.  **Networking**: Set your VM adapter to **Bridge Mode**.
-2.  **SSH Access**: Ensure `openssh-server` is installed.
+1. Open your browser on Windows or Linux:
+   - **`http://localhost`** *(default on WSL2)*
+   - or the specific IP displayed at the end (e.g., `http://172.x.x.x`).
+2. Complete the standard 1-minute WordPress web setup (select site title, admin username, and password).
+
+---
+
+## 🛠 What It Provisions
+
+- **Full LAMP Stack**: Apache2, PHP 8+ with all required WP extensions (`curl`, `gd`, `mbstring`, `xml`, `zip`, `imagick`, etc.).
+- **Database Engine**: MariaDB or MySQL configured with `utf8mb4` encoding and dedicated WP database + user.
+- **WordPress Core**: Latest official release downloaded and unpacked to `/var/www/html/`.
+- **Config & Security**: Generates fresh cryptographic salts from the official WordPress API and configures `wp-config.php`.
+- **Web Server Ready**: Enables Apache `mod_rewrite` and `AllowOverride All` so pretty permalinks work immediately.
+- **Permissions**: Sets proper `www-data:www-data` ownership.
+
+---
+
+## 🖥 Environment Notes
+
+- **WSL2**: Requires systemd enabled (default in modern WSL2). Run inside your WSL Ubuntu terminal and access directly via `http://localhost` from Windows.
+- **Virtual Machines (VirtualBox, Proxmox, VMware)**: Use **Bridge Mode** networking so the guest IP is reachable from your host machine.
 
 ---
 

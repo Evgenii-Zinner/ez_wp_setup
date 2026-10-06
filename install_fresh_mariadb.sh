@@ -5,7 +5,8 @@ DB_NAME="wordpress_db"
 DB_USER="wp_admin"
 DB_PASS=$(openssl rand -base64 12 | tr -dc 'a-zA-Z0-9')
 MARIADB_ROOT_PASS=$(openssl rand -base64 12 | tr -dc 'a-zA-Z0-9')
-ACCESS_URL="http://$(hostname -I | awk '{print $1}')"
+LOCAL_IP=$(hostname -I 2>/dev/null | awk '{print $1}')
+ACCESS_URL="http://${LOCAL_IP:-localhost}"
 
 # --- NEON AESTHETICS ---
 P='\033[1;35m'  # Neon Purple
@@ -78,13 +79,13 @@ render_ui
 # EXECUTION
 run_step 0 "sleep 0.5"
 run_step 1 "apt update && apt upgrade -y"
-run_step 2 "export DEBIAN_FRONTEND=noninteractive && apt install -y apache2 mariadb-server php libapache2-mod-php php-mysql php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip php-bcmath php-imagick ed"
+run_step 2 "export DEBIAN_FRONTEND=noninteractive && apt install -y apache2 mariadb-server php libapache2-mod-php php-mysql php-curl php-gd php-mbstring php-xml php-xmlrpc php-soap php-intl php-zip php-bcmath php-imagick ed curl"
 run_step 3 "systemctl start mariadb && \
 mariadb -e \"ALTER USER 'root'@'localhost' IDENTIFIED BY '$MARIADB_ROOT_PASS';\" || true && \
 db_silent <<EOF
 DROP DATABASE IF EXISTS $DB_NAME; 
 DROP USER IF EXISTS '$DB_USER'@'localhost';
-CREATE DATABASE $DB_NAME DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
+CREATE DATABASE $DB_NAME DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASS';
 GRANT ALL ON $DB_NAME.* TO '$DB_USER'@'localhost'; 
 FLUSH PRIVILEGES;
@@ -96,12 +97,12 @@ sed -i \"s|username_here|$DB_USER|\" wp-config.php && \
 sed -i \"s|password_here|$DB_PASS|\" wp-config.php && \
 SALT=\$(curl -s https://api.wordpress.org/secret-key/1.1/salt/) && \
 printf '%%s\n' \"g/put your unique phrase here/d\" a \"\$SALT\" . w | ed -s wp-config.php"
-run_step 6 "chown -R www-data:www-data /var/www/html/ && chmod -R 755 /var/www/html/ && a2enmod rewrite && systemctl restart apache2"
+run_step 6 "chown -R www-data:www-data /var/www/html/ && chmod -R 755 /var/www/html/ && a2enmod rewrite && sed -i '/<Directory \/var\/www\/>/,/<\/Directory>/ s/AllowOverride None/AllowOverride All/' /etc/apache2/apache2.conf && systemctl restart apache2"
 
 # --- OUTPUT TABLE ---
 TITLE="  ✨  SYSTEM FULLY PROVISIONED // READY FOR UPLINK"
 TITLE_LEN=${#TITLE}
-TITLE_PADDING=$((82 - TITLE_LEN))
+TITLE_PADDING=$((81 - TITLE_LEN))
 
 printf "\n ${P}╔══════════════════════════════════════════════════════════════════════════════════╗${NC}\n"
 printf " ${P}║${C}${TITLE}%${TITLE_PADDING}s${P}║${NC}\n" ""
